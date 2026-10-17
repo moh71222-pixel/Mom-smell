@@ -1,76 +1,55 @@
-// Scroll plays the film: the journey section's scroll progress maps to video time.
+// Opening film: plays by itself when the page opens, then the collection appears
+// and the page can be browsed. Without JS (or with reduced motion) the page
+// simply starts on the collection.
 (() => {
-  const journey = document.querySelector(".journey");
-  const video = journey.querySelector(".journey__video");
-  const routeLinks = [...journey.querySelectorAll(".journey__route a")];
-  const chapters = [...journey.querySelectorAll(".chapter")];
+  const root = document.documentElement;
+  const intro = document.querySelector(".intro");
+  const video = intro.querySelector(".intro__video");
+  const captions = [...intro.querySelectorAll(".caption")];
+  const bar = intro.querySelector(".intro__bar");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const small = matchMedia("(max-width: 860px), (pointer: coarse)").matches;
+  let done = false;
+  let watchdog = 0;
 
-  let target = 0;
-  let current = 0;
-  let ready = false;
-
-  const progress = () => {
-    const rect = journey.getBoundingClientRect();
-    const span = journey.offsetHeight - innerHeight;
-    return span > 0 ? Math.min(1, Math.max(0, -rect.top / span)) : 0;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    clearTimeout(watchdog);
+    video.pause();
+    root.classList.remove("intro-playing");
+    root.classList.add("intro-done");
   };
 
-  const onScroll = () => {
-    const p = progress();
-    journey.style.setProperty("--p", p.toFixed(4));
-    if (ready) target = p * (video.duration - 0.05);
-    const mid = innerHeight / 2;
-    let active = 0;
-    chapters.forEach((ch, i) => {
-      if (ch.getBoundingClientRect().top < mid) active = i;
-    });
-    routeLinks.forEach((a, i) => a.classList.toggle("is-active", i === active));
+  const start = () => {
+    done = false;
+    root.classList.remove("intro-done");
+    root.classList.add("intro-playing");
+    scrollTo(0, 0);
+    video.currentTime = 0;
+    // If the film cannot start within a few seconds, go straight to the collection.
+    watchdog = setTimeout(() => { if (video.currentTime < 0.1) finish(); }, 6000);
+    video.play().catch(finish);
   };
 
-  const tick = () => {
-    if (ready) {
-      current += (target - current) * 0.18;
-      if (Math.abs(video.currentTime - current) > 0.02 && !video.seeking) {
-        video.currentTime = current;
-      }
-    }
-    requestAnimationFrame(tick);
-  };
-
-  addEventListener("scroll", onScroll, { passive: true });
-  addEventListener("resize", onScroll);
-  onScroll();
-
-  if (reduced) return; // the poster and the chapter copy tell the story on their own
-
-  // Load the whole clip as a Blob so seeking never waits on the network.
-  const src = small ? video.dataset.srcMobile : video.dataset.src;
-  fetch(src)
-    .then((r) => r.blob())
-    .then((blob) => {
-      video.src = URL.createObjectURL(blob);
-      video.load();
-    })
-    .catch(() => {
-      video.src = src;
-    });
-
-  video.addEventListener("loadeddata", () => {
-    ready = true;
-    journey.classList.add("is-ready");
-    onScroll();
-    current = target;
-    video.currentTime = current;
+  video.addEventListener("timeupdate", () => {
+    const d = video.duration || 15;
+    const t = video.currentTime / d;
+    bar.style.setProperty("--t", t.toFixed(4));
+    const active = Math.min(captions.length - 1, Math.floor(t * captions.length));
+    captions.forEach((c, i) => c.classList.toggle("is-on", i === active));
+    if (video.duration && video.currentTime >= video.duration - 0.12) finish();
   });
+  video.addEventListener("ended", finish);
+  video.addEventListener("error", finish);
+  intro.querySelector(".intro__skip").addEventListener("click", finish);
+  intro.querySelector(".replay").addEventListener("click", start);
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && !done) finish(); });
 
-  // iOS needs one user gesture before a paused video will paint seeked frames.
-  const prime = () => {
-    video.play().then(() => video.pause()).catch(() => {});
-    removeEventListener("touchstart", prime);
-  };
-  addEventListener("touchstart", prime, { passive: true });
-
-  requestAnimationFrame(tick);
+  if (reduced) {
+    root.classList.add("intro-done");
+    return;
+  }
+  video.src = small ? video.dataset.srcMobile : video.dataset.src;
+  start();
 })();
