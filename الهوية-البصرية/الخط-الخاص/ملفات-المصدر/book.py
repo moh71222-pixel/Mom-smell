@@ -459,7 +459,36 @@ def label_box(x, y, w, label, sub=None):
     return o
 
 
-n = 1
+import base64
+_img = base64.b64encode(open(os.path.join(SCR, "out", "opening.jpg"), "rb").read()).decode()
+op = [rect(0, 0, PW, PH, CREAM), tri_row(0, PW, 0, 18, (OCHRE, RED), down=True, n=64)]
+iw, ih = 1000, 1000 * 1493 / 2000
+op.append(rect(34, 96, iw + 12, ih + 12, TEAL))
+op.append(f'<image x="40" y="102" width="{iw}" height="{ih}" href="data:image/jpeg;base64,{_img}" preserveAspectRatio="xMidYMid slice"/>')
+op.append(T("الصورة الكاملة للهوية: من باب البيت النجدي إلى العلبة في يد العميل", "reg", 19, 40 + iw, 102 + ih + 46, MUTED, "end"))
+px0, pw_ = 1080, PW - 1080
+op.append(rect(px0, 18, pw_, PH - 18, TEAL))
+op.append(sadu_strip(px0, PW, PH - 50, 50))
+xr = PW - 50
+op.append(T("رائحة أمي", "kufi", 70, xr, 140, CREAM, "end"))
+op.append(T("بخور · عود · مرشات · أدهان", "bold", 24, xr, 190, OCHRE, "end"))
+op.append(f'<line x1="{px0+50}" y1="220" x2="{xr}" y2="220" stroke="{OCHRE}" stroke-width="2"/>')
+blocks = [
+    ("المنتج", "بخور ومعمول وعود ومرشات وأدهان، تُصنع يدوياً على دفعات صغيرة بخلطات البيت. لكل منتج رقم تشغيلة يضمن نفس الريحة كل مرة."),
+    ("الهوية", "باب البيت النجدي المرسوم هو قلب الهوية: مثلثاته ومعيناته ومساميره صارت نقوش العلب والملصقات، وألوانه البترولي والأحمر والمغرة صارت لغة البراند."),
+    ("حائل", "من أرض حاتم الطائي ورمز الكرم؛ جبلا أجا وسلمى بلونهما الأحمر، وشُرَف قصورها الطينية، ونقوش جبة، كلها حاضرة في الشعار والتغليف."),
+    ("الوعد", "كل علبة تفتحها، تفتح معها باب بيت أمي."),
+]
+y = 285
+for t, txt in blocks:
+    op.append(diamond(xr - 6, y - 9, 9, RED))
+    op.append(T(t, "xbold", 28, xr - 28, y, OCHRE, "end"))
+    sp, y = para(txt, "reg", 20, xr, y + 42, pw_ - 100, CREAM, 1.7)
+    op.append(sp)
+    y += 26
+PAGES.append(svgdoc(PW, PH, "".join(op)))
+
+n = 2
 # 1 cover
 cov = [rect(0, 0, PW, PH, TEAL), sadu_strip(0, PW, PH - 60, 60)]
 cov.append(nest(LOGO_REV, 90, 150, 500))
@@ -481,7 +510,7 @@ for i, t in enumerate(toc):
     col, row = i // 9, i % 9
     x = PW - 120 - col * 640
     y = 270 + row * 70
-    b.append(T(f"{i + 3:02d}", "enb", 26, x, y, OCHRE, "end"))
+    b.append(T(f"{i + 4:02d}", "enb", 26, x, y, OCHRE, "end"))
     b.append(T(t, "bold", 30, x - 70, y, TEAL, "end"))
     b.append(f'<line x1="{x-560}" y1="{y+22}" x2="{x}" y2="{y+22}" stroke="#D9CBB3" stroke-width="1.5"/>')
 b.append(nest(LOGO, 90, 300, 300, vb=MARK_VB))
