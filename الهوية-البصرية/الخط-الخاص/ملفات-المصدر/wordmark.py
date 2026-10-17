@@ -58,26 +58,15 @@ def smoke(cx, base, h, col, sw):
             f'stroke-width="{sw}" stroke-linecap="round"/>')
 
 
-def wordmark(bg=None, ink=TEAL, door=OCHRE, en=TEAL, tag=None, w=1500, h=820):
-    glyphs = shape("رائحة أمي")
-    body, total, x0 = draw(glyphs, 300, w / 2, 430, colors={"uni0623.door": door}, default=ink,
-                           swap={"uni0623": "uni0623.door"})
-    # find the door's x position to place the smoke above it
-    s, cx = 300 / UPEM, 0
-    for g, p in glyphs:
-        g2 = "uni0623.door" if g == "uni0623" else g
-        adv = TT["hmtx"][g2][0]
-        if g2 == "uni0623.door":
-            door_cx = x0 + (cx + 210) * s
-        cx += adv
-    parts = [body, (f'<path d="M{door_cx:.1f},{430-1000*s:.1f} c-28,-22 26,-40 0,-66 s-26,-44 6,-70" fill="none" stroke="{door}" stroke-width="11" stroke-linecap="round"/>'),
-             tri_row(x0, x0 + total, 545, 34)]
+def wordmark(bg=None, ink=TEAL, en=TEAL, tag=None, w=1500, h=820):
+    body, total, x0 = draw(shape("رائحة أمي"), 300, w / 2, 430, default=ink)
+    parts = [body, tri_row(x0, x0 + total, 545, 34)]
     d, _ = text_path("RAIHAT UMMI", "Jost.ttf", 66, w / 2, 670, "middle", wght=600, tracking=200)
     parts.append(f'<path d="{d}" fill="{en}"/>')
     if tag:
         d, _ = text_path("من أرض حاتم · حائل", "Almarai-Regular.ttf", 38, w / 2, 745, "middle")
         parts.append(f'<path d="{d}" fill="{tag}"/>')
-    return svg(w, h + 70, '<g transform="translate(0,70)">' + "".join(parts) + "</g>", bg)
+    return svg(w, h, "".join(parts), bg)
 
 
 def save(name, s, width):
@@ -87,8 +76,8 @@ def save(name, s, width):
 
 save("الكتابة-الرئيسية", wordmark(tag=RED), 2800)
 save("الكتابة-الرئيسية-رملية", wordmark(SAND, tag=RED), 2800)
-save("الكتابة-الرئيسية-معكوسة", wordmark(TEAL, ink=CREAM, door=OCHRE, en=CREAM, tag=OCHRE), 2800)
-save("الكتابة-الرئيسية-داكنة", wordmark(TEAL_DARK, ink=SAND, door=OCHRE, en=SAND), 2800)
+save("الكتابة-الرئيسية-معكوسة", wordmark(TEAL, ink=CREAM, en=CREAM, tag=OCHRE), 2800)
+save("الكتابة-الرئيسية-داكنة", wordmark(TEAL_DARK, ink=SAND, en=SAND), 2800)
 
 # specimen ----------------------------------------------------------------------
 W, rows = 1800, []
