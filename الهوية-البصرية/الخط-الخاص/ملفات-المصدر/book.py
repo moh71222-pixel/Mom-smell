@@ -163,7 +163,7 @@ def sadu_strip(x0, x1, y, h, cols=(OCHRE, RED), bg=None):
 
 def svgdoc(w, h, body, bg=None):
     r = rect(0, 0, w, h, bg) if bg else ""
-    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}">{r}{body}</svg>'
+    return f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 {w} {h}" width="{w}" height="{h}">{r}{body}</svg>'
 
 
 # ------------------------------------------------------------------ products
@@ -538,15 +538,17 @@ toc = ["قصة البراند", "قصة الشعار", "نسخ الشعار", "�
        "الألوان", "الخطوط", "العناصر والنقوش", "صوت البراند", "المنتجات", "ملصقات المعمول والعود",
        "ملصقات المرشات", "ملصقات الأدهان", "الستكرات", "التغليف", "السوشال ميديا", "القرطاسية",
        "مواصفات الطباعة"]
+toc = [(t, i + 5) for i, t in enumerate(toc)]
+toc += [("التغليف ثلاثي الأبعاد", 23), ("العلبة والمرش والتولة بالمقاسات", 24), ("كراتين المنتجات", 27),
+        ("بوكس الهدايا وكرتون الشحن", 28), ("قوالب القص", 30), ("جدول المقاسات", 32)]
 b = []
-for i, t in enumerate(toc):
-    col, row = i // 9, i % 9
-    x = PW - 120 - col * 640
-    y = 270 + row * 70
-    b.append(T(f"{i + 5:02d}", "enb", 26, x, y, OCHRE, "end"))
-    b.append(T(t, "bold", 30, x - 70, y, TEAL, "end"))
-    b.append(f'<line x1="{x-560}" y1="{y+22}" x2="{x}" y2="{y+22}" stroke="#D9CBB3" stroke-width="1.5"/>')
-b.append(nest(LOGO, 90, 300, 300, vb=MARK_VB))
+for i, (t, pg) in enumerate(toc):
+    col, row = i // 12, i % 12
+    x = PW - 120 - col * 700
+    y = 250 + row * 54
+    b.append(T(f"{pg:02d}", "enb", 24, x, y, OCHRE, "end"))
+    b.append(T(t, "bold", 26, x - 64, y, TEAL if pg < 23 else RED, "end"))
+    b.append(f'<line x1="{x-600}" y1="{y+20}" x2="{x}" y2="{y+20}" stroke="#D9CBB3" stroke-width="1.5"/>')
 page("المحتويات", None, "".join(b), n); n += 1
 
 # 3 brand story
@@ -888,6 +890,9 @@ for i, t in enumerate(notes):
     b.append(T(t, "reg", 21, PW - 125, 835 + i * 42, INK, "end"))
 page("مواصفات الطباعة", "للمطبعة والمصمم", "".join(b), len(PAGES) + 1)
 
+exec(open(os.path.join(os.path.dirname(__file__), 'pack_pages.py')).read())
+assert pack_start == 23, pack_start
+
 # back cover
 bc = [rect(0, 0, PW, PH, SAND), nest(LOGO, PW / 2 - 300, 120, 600)]
 bc.append(T("@raihatummi  ·  raihatummi.com", "enm", 28, PW / 2, 900, TEAL, "middle"))
@@ -931,6 +936,13 @@ save("تغليف-وقرطاسية", "كرت-العمل-ظهر", biz_back(), 90)
 save("سوشال-ميديا", "صورة-الحساب", avatar(), None)
 save("سوشال-ميديا", "قالب-منشور", post_template(), None)
 save("سوشال-ميديا", "قالب-ستوري", story_template(), None)
+os.makedirs(os.path.join(pr, "تغليف-وقرطاسية", "قوالب-القص"), exist_ok=True)
+for nm, (s_, mw) in PACK_FILES.items():
+    save("تغليف-وقرطاسية", nm, s_, mw)
+for nm, dims in [("كرتونة-العلبة", SPEC["carton_jar"]), ("كرتونة-المرش", SPEC["carton_spray"]),
+                 ("كرتونة-التولة", SPEC["carton_tola"]), ("كرتونة-ربع-التولة", SPEC["carton_qtola"])]:
+    d_ = dieline_file(*dims)
+    open(os.path.join(pr, "تغليف-وقرطاسية", "قوالب-القص", nm + ".svg"), "w").write(d_)
 for k, t in hl:
     save("سوشال-ميديا", "هايلايت-" + t, svgdoc(400, 400, "".join(highlight(k, t))), None)
 print("book ok", len(PAGES), "pages")
