@@ -182,6 +182,9 @@ font["OS/2"].usWeightClass = 400
 font["OS/2"].fsSelection = (font["OS/2"].fsSelection & ~0b1100001) | 0b1000000
 font["head"].macStyle = 0
 font["post"].italicAngle = 0
+# merge overlapping contours so joins render solid in every app
+from fontTools.ttLib.removeOverlaps import removeOverlaps
+removeOverlaps(font)
 for t in ("STAT", "MVAR", "HVAR", "avar", "fvar", "gvar"):
     if t in font:
         del font[t]

@@ -135,6 +135,31 @@ def smoke(cx, base, h, col, sw=7):
             f'stroke-linecap="round"/>')
 
 
+def mabkhara(cx, base, h, body, coal, smoke_col):
+    """Small Najdi incense burner with a curl of smoke."""
+    w = h * 0.9
+    out = [poly([(cx - w * .32, base), (cx + w * .32, base), (cx + w * .24, base - h * .14), (cx - w * .24, base - h * .14)], body),
+           poly([(cx - w * .12, base - h * .14), (cx + w * .12, base - h * .14), (cx + w * .08, base - h * .30), (cx - w * .08, base - h * .30)], body),
+           poly([(cx - w * .40, base - h * .30), (cx + w * .40, base - h * .30), (cx + w * .30, base - h * .58), (cx - w * .30, base - h * .58)], body)]
+    for k in (-1, 0, 1):
+        out.append(diamond(cx + k * w * .16, base - h * .44, h * .07, coal))
+    for k in (-1, 1):
+        out.append(poly([(cx + k * w * .40, base - h * .30), (cx + k * w * .48, base - h * .30), (cx + k * w * .36, base - h * .58), (cx + k * w * .30, base - h * .58)], coal))
+    out.append(smoke(cx, base - h * .64, h * .55, smoke_col, max(3, h * .06)))
+    return "".join(out)
+
+
+def stud_rows(xs, y_from, y_to, step, r, cols):
+    out, k = [], 0
+    y = y_from
+    while y <= y_to:
+        for x in xs:
+            out.append(diamond(x, y, r, cols[k % len(cols)]))
+        y += step
+        k += 1
+    return "".join(out)
+
+
 # ---------- 2. square Kufic frame ----------
 def square(bg=SAND, frame=TEAL, ink=TEAL, line=OCHRE, hail=False, tag=RED):
     p = []
@@ -147,12 +172,17 @@ def square(bg=SAND, frame=TEAL, ink=TEAL, line=OCHRE, hail=False, tag=RED):
     p.append(tri_row(i0 + 70, i1 - 70, j0 + 14, 24, (OCHRE, RED), down=True, n=11))
     p += [corner(i0 + 12, j0 + 12, 1, 1, frame, RED), corner(i1 - 12, j0 + 12, -1, 1, frame, RED),
           corner(i0 + 12, j1 - 12, 1, -1, frame, RED), corner(i1 - 12, j1 - 12, -1, -1, frame, RED)]
+    # rows of small diamonds down both inner edges, like the studs of a Najdi door
+    p.append(stud_rows((i0 + 26, i1 - 26), j0 + 100, j1 - 100, 44, 8, (OCHRE, RED)))
     if hail:
         p.append(ridge(i0 + 3, i1 - 3, j1 - 3, 80, RED))
-        body, _ = stacked(cx, j0 + 50, 540, 425, ink)
+        body, _ = stacked(cx, j0 + 76, 520, (j1 - 100) - (j0 + 76), ink)
     else:
-        p.append(tri_row(i0 + 70, i1 - 70, j1 - 38, 24, (OCHRE, RED), n=11))
-        body, _ = stacked(cx, j0 + 52, 550, 500, ink)
+        base = j1 - 16
+        p.append(tri_row(i0 + 70, cx - 62, base - 24, 24, (OCHRE, RED), n=5))
+        p.append(tri_row(cx + 62, i1 - 70, base - 24, 24, (RED, OCHRE), n=5))
+        p.append(mabkhara(cx, base, 110, frame, RED, OCHRE))
+        body, _ = stacked(cx, j0 + 76, 520, (j1 - 140) - (j0 + 76), ink)
     p.append(body)
     for x in (x0, x1):
         p.append(diamond(x, (y0 + y1) / 2, 32, OCHRE, hole=frame))
@@ -184,10 +214,10 @@ def door(bg=SAND, frame=TEAL, ink=TEAL, line=OCHRE, hail=False, tag=RED):
     for x in (i0 + 22, i1 - 22):
         for k in range(9):
             p.append(f'<circle cx="{x}" cy="{j0 + 80 + k * 56}" r="6" fill="{line}"/>')
-    body, bottom = stacked(cx, j0 + 66, 400, 435, ink)
+    body, bottom = stacked(cx, j0 + 60, 390, (j1 - 175) - (j0 + 60), ink)
     p.append(body)
-    ky = bottom + 55
-    p.append(f'<line x1="{cx}" y1="{bottom+30}" x2="{cx}" y2="{j1-16}" stroke="{line}" stroke-width="5"/>')
+    ky = j1 - 135
+    p.append(f'<line x1="{cx}" y1="{ky-40}" x2="{cx}" y2="{j1-16}" stroke="{line}" stroke-width="5"/>')
     for x in (cx - 36, cx + 36):
         p.append(f'<circle cx="{x}" cy="{ky}" r="17" fill="none" stroke="{OCHRE}" stroke-width="7"/>')
         p.append(f'<circle cx="{x}" cy="{ky-23}" r="5" fill="{OCHRE}"/>')

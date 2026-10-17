@@ -46,11 +46,15 @@ class Line:
         self.top = max(b[3] for b in self.boxes)
         self.bottom = min(b[1] for b in self.boxes)
 
-    def path(self, s, x_left, y):
-        pen = SVGPathPen(GS)
+    def path(self, s, x_left, y, fill):
+        """One <path> per glyph, so overlapping joins never cancel each other out."""
+        out = []
         for g, (a, b, c, d, e, f) in self.items:
+            pen = SVGPathPen(GS)
             GS[g].draw(TransformPen(pen, (a * s, 0, 0, -d * s, x_left + e * s, y - f * s)))
-        return pen.getCommands()
+            if pen.getCommands():
+                out.append(f'<path d="{pen.getCommands()}" fill="{fill}"/>')
+        return "".join(out)
 
 
 def gap_between(l1, l2, dx1, dx2, pad):
@@ -98,16 +102,19 @@ def block(t1, t2, align="centre", tall=1.0, s2=1.0, kashida=0, caps=False):
     l1, l2 = Line(t1, tall), Line(t2, tall, s2)
     dx1, dx2, gap, W = compose(l1, l2, align)
     H = l1.top + gap - l2.bottom
+    ink_l = min(dx1 + min(b[0] for b in l1.boxes), dx2 + min(b[0] for b in l2.boxes))
+    ink_r = max(dx1 + max(b[2] for b in l1.boxes), dx2 + max(b[2] for b in l2.boxes))
+    W = ink_r - ink_l
     if caps:
         H += 140
 
     def stacked(cx, top, width, height, ink):
         s = min(width / W, height / H)
-        x0 = cx - W * s / 2
+        x0 = cx - (ink_l + W / 2) * s
+        top = top + (height - H * s) / 2  # centre the block vertically
         y1 = top + (l1.top + (140 if caps else 0)) * s
         y2 = y1 + gap * s
-        d1, d2 = l1.path(s, x0 + dx1 * s, y1), l2.path(s, x0 + dx2 * s, y2)
-        out = f'<path d="{d1}" fill="{ink}"/><path d="{d2}" fill="{ink}"/>'
+        out = l1.path(s, x0 + dx1 * s, y1, ink) + l2.path(s, x0 + dx2 * s, y2, ink)
         if caps:  # fort crenellation on top of every alif
             for line, dx, y in ((l1, dx1, y1), (l2, dx2, y2)):
                 for a in line.alifs:
