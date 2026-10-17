@@ -125,14 +125,22 @@ def rect(x, y, w, h, fill, rx=0, stroke=None, sw=0):
     return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{rx}" fill="{fill}"{st}/>'
 
 
+_NEST = [0]
+
+
 def nest(svg_str, x, y, w, h=None, vb=None):
+    """Place an SVG inside a box using a group transform (cairo mis-scales nested <svg> viewBoxes)."""
     m = re.match(r'<svg[^>]*viewBox="([^"]+)"[^>]*>', svg_str)
-    vb = vb or m.group(1)
-    vw, vh = [float(v) for v in vb.split()[2:]]
+    vx, vy, vw, vh = [float(v) for v in (vb or m.group(1)).split()]
     h = h or w * vh / vw
+    k = min(w / vw, h / vh)
+    ox, oy = x + (w - vw * k) / 2, y + (h - vh * k) / 2
     inner = svg_str[m.end():svg_str.rfind("</svg>")]
-    return (f'<svg x="{x}" y="{y}" width="{w}" height="{h}" viewBox="{vb}" '
-            f'preserveAspectRatio="xMidYMid meet" overflow="hidden">{inner}</svg>')
+    _NEST[0] += 1
+    cid = f"nest{_NEST[0]}"
+    return (f'<clipPath id="{cid}"><rect x="{x}" y="{y}" width="{w}" height="{h}"/></clipPath>'
+            f'<g clip-path="url(#{cid})"><g transform="translate({ox:.3f},{oy:.3f}) scale({k:.6f}) '
+            f'translate({-vx:.3f},{-vy:.3f})">{inner}</g></g>')
 
 
 MARK_VB = "122 40 756 740"
@@ -229,11 +237,13 @@ def oil_label(name, size_txt):
     for k in range(5):
         o.append(diamond(W - 45, 40 + k * 55, 14, OCHRE if k % 2 == 0 else RED))
     o.append(rect(10, 10, W - 110, H - 20, "none", stroke=OCHRE, sw=3))
-    o.append(T("رائحة أمي", "kufi", 30, W - 125, 62, TEAL, "end"))
-    sz = fit(name, "kufi", 340, 64)
-    o.append(T(name, "kufi", sz, W - 125, 158, TEAL_DARK, "end"))
-    o.append(T("دهن عطري · " + size_txt, "bold", 24, W - 125, 210, RED, "end"))
-    o.append(T("صُنع يدوياً في حائل · رقم التشغيلة ......", "reg", 15, W - 125, 255, MUTED, "end"))
+    o.append(nest(LOGO, 24, 62, 150, 150, vb=MARK_VB))
+    o.append(f'<line x1="188" y1="40" x2="188" y2="{H-40}" stroke="{OCHRE}" stroke-width="2"/>')
+    sz = fit(name, "kufi", 195, 52)
+    o.append(T(name, "kufi", sz, W - 118, 120, TEAL_DARK, "end"))
+    o.append(T("دهن عطري · " + size_txt, "bold", 21, W - 118, 172, RED, "end"))
+    o.append(T("صُنع يدوياً في حائل", "reg", 15, W - 118, 222, MUTED, "end"))
+    o.append(T("رقم التشغيلة ......", "reg", 15, W - 118, 250, MUTED, "end"))
     return svgdoc(W, H, "".join(o))
 
 
@@ -766,12 +776,13 @@ for i, (cat, en, acc, desc, items) in enumerate(CATS):
     s, yy = para(desc, "reg", 19, x + 310, 360, 280, INK, 1.6)
     b.append(s)
     yy += 20
+    step = min(120, (885 - yy) / len(items))
     for name, size_txt, price in items:
         b.append(f'<line x1="{x+30}" y1="{yy}" x2="{x+310}" y2="{yy}" stroke="#D9CBB3" stroke-width="1.5"/>')
         b.append(T(name, "kufi", fit(name, "kufi", 280, 34), x + 310, yy + 55, TEAL, "end"))
         b.append(T(size_txt, "reg", 19, x + 310, yy + 94, MUTED, "end"))
         b.append(T(price + " ر.س", "xbold", 22, x + 30, yy + 94, acc if acc != OCHRE else RED, "start"))
-        yy += 120
+        yy += step
 page("المنتجات", "أربع فئات، ولكل فئة لون يميزها", "".join(b), n); n += 1
 
 # 13-15 labels
