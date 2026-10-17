@@ -441,3 +441,145 @@ button { font: inherit; cursor: pointer; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ---------- basket count in the header ---------- */
+.header__order { display: inline-flex; align-items: center; gap: 0.5rem; border: 0; }
+.cart-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.45rem;
+  height: 1.45rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--cream);
+  color: var(--red);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.cart-count.is-bump { animation: bump 0.45s cubic-bezier(.2,1.6,.4,1); }
+@keyframes bump { 40% { transform: scale(1.45); } }
+.product__ask { border: 0; font-family: inherit; }
+.product__ask.is-added { background: var(--red); }
+
+/* ---------- how to use ---------- */
+.usage { padding: clamp(3.5rem, 8vw, 6rem) clamp(1rem, 5vw, 3rem); background: var(--sand); text-align: center; }
+.usage__lead { max-width: 44ch; margin: 0.6rem auto 0; color: var(--ink-soft); font-size: 1.1rem; }
+.usage__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.2rem;
+  max-width: 72rem;
+  margin: 2.6rem auto 0;
+  text-align: right;
+}
+.ritual {
+  position: relative;
+  padding: 2.4rem 1.4rem 1.6rem;
+  background: var(--cream);
+  clip-path: polygon(0 12%, 50% 0, 100% 12%, 100% 100%, 0 100%);
+  transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+}
+.ritual:hover { transform: translateY(-6px); }
+.ritual__n { display: block; font-family: var(--kufi); font-size: 2.2rem; line-height: 1; color: var(--ochre); }
+.ritual h3 { margin: 0.6rem 0 0.4rem; font-family: var(--kufi); font-weight: 400; font-size: 1.6rem; color: var(--teal); }
+.ritual p { margin: 0; color: var(--ink-soft); font-size: 0.98rem; }
+@media (max-width: 960px) { .usage__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .usage__grid { grid-template-columns: 1fr; } }
+
+/* ---------- floating basket (phones) ---------- */
+.cart-fab {
+  position: fixed;
+  z-index: 35;
+  bottom: 1rem;
+  left: 50%;
+  display: none;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.8rem 1.3rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--teal);
+  color: var(--cream);
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgb(8 52 58 / 0.35), 0 0 0 3px var(--ochre);
+  transform: translateX(-50%);
+}
+.cart-fab svg { width: 1.3rem; height: 1.3rem; }
+.has-items .cart-fab { display: inline-flex; }
+.intro-playing .cart-fab { display: none; }
+@media (min-width: 761px) { .has-items .cart-fab { display: none; } }
+
+/* ---------- basket drawer ---------- */
+.cart { position: fixed; inset: 0; z-index: 60; }
+.cart[hidden] { display: none; }
+.cart__backdrop { position: absolute; inset: 0; background: rgb(4 24 27 / 0.55); animation: fade 0.3s both; }
+@keyframes fade { from { opacity: 0; } }
+.cart__panel {
+  position: absolute;
+  inset: 0 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: min(26rem, 100%);
+  background: var(--cream);
+  box-shadow: -10px 0 40px rgb(0 0 0 / 0.25);
+  animation: slide 0.4s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes slide { from { transform: translateX(100%); } }
+.cart__head { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; background: var(--teal); color: var(--cream); }
+.cart__head h2 { margin: 0; font-family: var(--kufi); font-weight: 400; font-size: 1.6rem; }
+.cart__close { width: 2.4rem; height: 2.4rem; border: 0; border-radius: 50%; background: rgb(244 236 221 / 0.12); color: var(--cream); font-size: 1.6rem; line-height: 1; }
+.cart__list { flex: 1; margin: 0; padding: 0.5rem 1.25rem; overflow-y: auto; list-style: none; }
+.cart__item { display: grid; grid-template-columns: 1fr auto; gap: 0.3rem 1rem; align-items: center; padding: 0.9rem 0; border-bottom: 1px dashed rgb(13 74 82 / 0.3); }
+.cart__name { margin: 0; font-family: var(--kufi); font-size: 1.2rem; color: var(--teal-dark); }
+.cart__meta { margin: 0; color: var(--ink-soft); font-size: 0.85rem; }
+.cart__line { grid-row: span 2; text-align: left; }
+.cart__price { display: block; font-weight: 800; color: var(--red); }
+.qty { display: inline-flex; align-items: center; margin-top: 0.3rem; border: 1.5px solid var(--teal); border-radius: 999px; }
+.qty button { width: 2rem; height: 2rem; border: 0; background: none; color: var(--teal); font-size: 1.1rem; font-weight: 800; }
+.qty span { min-width: 1.6rem; text-align: center; font-weight: 800; }
+.cart__empty { margin: 2rem 1.25rem; color: var(--ink-soft); text-align: center; }
+.cart__foot { padding: 1rem 1.25rem 1.4rem; border-top: 3px solid var(--teal); background: var(--sand); }
+.cart__total { display: flex; justify-content: space-between; margin: 0 0 0.8rem; font-weight: 700; font-size: 1.1rem; }
+.cart__total strong { color: var(--red); font-size: 1.3rem; }
+.cart__send {
+  display: block;
+  text-align: center;
+  width: 100%;
+  padding: 0.95rem;
+  border: 0;
+  background: var(--teal);
+  color: var(--cream);
+  font-weight: 800;
+  font-size: 1.05rem;
+  box-shadow: 5px 5px 0 var(--red);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.cart__send:hover { transform: translate(-3px, -3px); box-shadow: 8px 8px 0 var(--red); }
+.cart__send[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+.cart__hint { margin: 0.7rem 0 0; color: var(--ink-soft); font-size: 0.82rem; text-align: center; }
+
+.toast {
+  position: fixed;
+  z-index: 70;
+  top: 4.6rem;
+  left: 50%;
+  max-width: calc(100% - 2rem);
+  padding: 0.75rem 1.2rem;
+  border-radius: 0.6rem;
+  background: var(--teal-dark);
+  color: var(--cream);
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+  transform: translate(-50%, -1rem);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.35s, opacity 0.35s;
+}
+.toast.is-on { transform: translate(-50%, 0); opacity: 1; }
+
+/* ---------- reveal on scroll (only when JS runs, so nothing is hidden without it) ---------- */
+.js .reveal { transform: translateY(28px); opacity: 0; transition: transform 0.9s cubic-bezier(.2,.8,.2,1), opacity 0.9s; }
+.js .reveal.is-in { transform: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .js .reveal { transform: none; opacity: 1; } }
