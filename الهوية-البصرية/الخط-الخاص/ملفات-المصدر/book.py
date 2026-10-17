@@ -460,35 +460,58 @@ def label_box(x, y, w, label, sub=None):
 
 
 import base64
-_img = base64.b64encode(open(os.path.join(SCR, "out", "opening.jpg"), "rb").read()).decode()
-op = [rect(0, 0, PW, PH, CREAM), tri_row(0, PW, 0, 18, (OCHRE, RED), down=True, n=64)]
-iw, ih = 1000, 1000 * 1493 / 2000
-op.append(rect(34, 96, iw + 12, ih + 12, TEAL))
-op.append(f'<image x="40" y="102" width="{iw}" height="{ih}" href="data:image/jpeg;base64,{_img}" preserveAspectRatio="xMidYMid slice"/>')
-op.append(T("الصورة الكاملة للهوية: من باب البيت النجدي إلى العلبة في يد العميل", "reg", 19, 40 + iw, 102 + ih + 46, MUTED, "end"))
-px0, pw_ = 1080, PW - 1080
-op.append(rect(px0, 18, pw_, PH - 18, TEAL))
-op.append(sadu_strip(px0, PW, PH - 50, 50))
-xr = PW - 50
-op.append(T("رائحة أمي", "kufi", 70, xr, 140, CREAM, "end"))
-op.append(T("بخور · عود · مرشات · أدهان", "bold", 24, xr, 190, OCHRE, "end"))
-op.append(f'<line x1="{px0+50}" y1="220" x2="{xr}" y2="220" stroke="{OCHRE}" stroke-width="2"/>')
-blocks = [
-    ("المنتج", "بخور ومعمول وعود ومرشات وأدهان، تُصنع يدوياً على دفعات صغيرة بخلطات البيت. لكل منتج رقم تشغيلة يضمن نفس الريحة كل مرة."),
-    ("الهوية", "باب البيت النجدي المرسوم هو قلب الهوية: مثلثاته ومعيناته ومساميره صارت نقوش العلب والملصقات، وألوانه البترولي والأحمر والمغرة صارت لغة البراند."),
-    ("حائل", "من أرض حاتم الطائي ورمز الكرم؛ جبلا أجا وسلمى بلونهما الأحمر، وشُرَف قصورها الطينية، ونقوش جبة، كلها حاضرة في الشعار والتغليف."),
-    ("الوعد", "كل علبة تفتحها، تفتح معها باب بيت أمي."),
-]
-y = 285
-for t, txt in blocks:
-    op.append(diamond(xr - 6, y - 9, 9, RED))
-    op.append(T(t, "xbold", 28, xr - 28, y, OCHRE, "end"))
-    sp, y = para(txt, "reg", 20, xr, y + 42, pw_ - 100, CREAM, 1.7)
-    op.append(sp)
-    y += 26
+def img64(name):
+    return base64.b64encode(open(os.path.join(SCR, "out", name), "rb").read()).decode()
+
+
+def photo(name, x, y, w, h, frame=None):
+    cid = f"c{abs(hash((name, x, y))) % 10**8}"
+    out = f'<clipPath id="{cid}"><rect x="{x}" y="{y}" width="{w}" height="{h}" rx="12"/></clipPath>'
+    out += (f'<image x="{x}" y="{y}" width="{w}" height="{h}" href="data:image/jpeg;base64,{img64(name)}" '
+            f'preserveAspectRatio="xMidYMid slice" clip-path="url(#{cid})"/>')
+    if frame:
+        out += rect(x, y, w, h, "none", rx=12, stroke=frame, sw=3)
+    return out
+
+
+# opening spread A: the identity in the real world (full bleed)
+op = [f'<image x="0" y="0" width="{PW}" height="{PH}" href="data:image/jpeg;base64,{img64("board_full.jpg")}" preserveAspectRatio="xMidYMid slice"/>']
+op.append(rect(0, PH - 70, PW, 70, TEAL))
+op.append(sadu_strip(0, PW, PH - 70, 14))
+op.append(T("رائحة أمي · من أرض حاتم · حائل", "kufi", 30, PW - 60, PH - 22, CREAM, "end"))
+op.append(T("BUKHOOR  ·  OUD  ·  ROOM SPRAY  ·  PERFUME OIL", "enm", 18, 60, PH - 26, OCHRE, "start", track=3))
 PAGES.append(svgdoc(PW, PH, "".join(op)))
 
-n = 2
+# opening spread B: from the door to the box
+ob = []
+tiles = [("crop_door.jpg", 80, 210, 340, 300, "الباب النجدي", "أصل النقوش والألوان"),
+         ("crop_aja.jpg", 440, 210, 520, 300, "أجا وسلمى", "أحمر الجبال في الهوية"),
+         ("crop_jar.jpg", 80, 580, 280, 300, "المعمول", "ملصق دائري بلون الفئة"),
+         ("crop_spray.jpg", 380, 580, 260, 300, "المرش", "ملصق مستطيل بالإطار"),
+         ("crop_box.jpg", 660, 580, 300, 300, "بوكس الهدايا", "نقشة البراند حول الشعار")]
+for name, x, y, w, h, t, sub in tiles:
+    ob.append(photo(name, x, y, w, h))
+    ob.append(T(t, "xbold", 20, x + w - 8, y + h + 34, TEAL, "end"))
+    ob.append(T(sub, "reg", 16, x + w - 8, y + h + 60, MUTED, "end"))
+xr, colw = PW - 90, 520
+blocks = [
+    ("المنتج", "بخور ومعمول وعود ومرشات وأدهان، تُصنع يدوياً على دفعات صغيرة بخلطات البيت. لكل منتج رقم تشغيلة يضمن نفس الريحة كل مرة.", TEAL),
+    ("الهوية", "باب البيت النجدي المرسوم هو قلب الهوية: مثلثاته ومعيناته ومساميره صارت إطار الشعار ونقوش العلب، وألوانه صارت لغة البراند.", RED),
+    ("حائل", "من أرض حاتم الطائي ورمز الكرم؛ جبلا أجا وسلمى بلونهما الأحمر، وشُرَف القصور الطينية، كلها حاضرة في الشعار والتغليف.", OCHRE),
+]
+y = 240
+for t, txt, a in blocks:
+    ob.append(rect(xr - 6, y - 30, 6, 40, a))
+    ob.append(T(t, "xbold", 30, xr - 22, y, a, "end"))
+    sp, y = para(txt, "reg", 21, xr - 22, y + 46, colw, INK, 1.75)
+    ob.append(sp)
+    y += 34
+ob.append(rect(xr - colw - 22, y, colw + 22, 110, TEAL, rx=14))
+ob.append(T("كل علبة تفتحها،", "kufi", 32, xr - 30, y + 48, CREAM, "end"))
+ob.append(T("تفتح معها باب بيت أمي.", "kufi", 32, xr - 30, y + 92, OCHRE, "end"))
+page("من الباب إلى العلبة", "الهوية في الواقع: من أين جاءت، وكيف تظهر على المنتج", "".join(ob), 2)
+
+n = 3
 # 1 cover
 cov = [rect(0, 0, PW, PH, TEAL), sadu_strip(0, PW, PH - 60, 60)]
 cov.append(nest(LOGO_REV, 90, 150, 500))
@@ -510,7 +533,7 @@ for i, t in enumerate(toc):
     col, row = i // 9, i % 9
     x = PW - 120 - col * 640
     y = 270 + row * 70
-    b.append(T(f"{i + 4:02d}", "enb", 26, x, y, OCHRE, "end"))
+    b.append(T(f"{i + 5:02d}", "enb", 26, x, y, OCHRE, "end"))
     b.append(T(t, "bold", 30, x - 70, y, TEAL, "end"))
     b.append(f'<line x1="{x-560}" y1="{y+22}" x2="{x}" y2="{y+22}" stroke="#D9CBB3" stroke-width="1.5"/>')
 b.append(nest(LOGO, 90, 300, 300, vb=MARK_VB))
