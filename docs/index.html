@@ -13,7 +13,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/brand/mark.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/raihat-kufi.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css?v=4">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Store", "name": "رائحة أمي | Raihat Ummi", "description": "معمول وعود ومرشات وأدهان مصنوعة باليد في حائل.", "address": {"@type": "PostalAddress", "addressLocality": "حائل", "addressCountry": "SA"}, "sameAs": ["https://www.instagram.com/mum_smell", "https://www.tiktok.com/@mum_smell"], "makesOffer": [{"@type": "Offer", "itemOffered": {"@type": "Product", "name": "الملكي (80 جرام)", "brand": "رائحة أمي"}, "price": "130", "priceCurrency": "SAR"}, {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "المخصوص (100 جرام)", "brand": "رائحة أمي"}, "price": "250", "priceCurrency": "SAR"}, {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "العرايسي (80 جرام)", "brand": "رائحة أمي"}, "price": "120", "priceCurrency": "SAR"}, {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "عود مسقى (80 جرام)", "brand": "رائحة أمي"}, "price": "95", "priceCurrency": "SAR"}, {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "عود طبيعي (80 جرام)", "brand": "رائحة أمي"}, "price": "250", "priceCurrency": "SAR"}, {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "أسيل (500 مل)", "brand": "رائحة أمي"}, "price": "80", "priceCurrency": "SAR"}, {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "شهد (500 مل)", "brand": "رائحة أمي"}, "price": "80", "priceCurrency": "SAR"}, {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "سديم (500 مل)", "brand": "رائحة أمي"}, "price": "80", "priceCurrency": "SAR"}, {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "فتشة العروس (تولة)", "brand": "رائحة أمي"}, "price": "70", "priceCurrency": "SAR"}, {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "خمرية الزعفران (تولة)", "brand": "رائحة أمي"}, "price": "60", "priceCurrency": "SAR"}, {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "خمرية المسك (تولة)", "brand": "رائحة أمي"}, "price": "60", "priceCurrency": "SAR"}, {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "دهن العود الطبيعي (ربع تولة)", "brand": "رائحة أمي"}, "price": "120", "priceCurrency": "SAR"}]}</script>
+  <link rel="stylesheet" href="style.css?v=5">
   <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
@@ -27,7 +28,7 @@
       <a href="#story">حكايتنا</a>
       <a href="#order">الطلب</a>
     </nav>
-    <a class="header__order" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener">اطلب الحين</a>
+    <button class="header__order" type="button" data-cart-open aria-label="سلة الطلب">سلتي <span class="cart-count" data-count>0</span></button>
   </header>
 
   <main>
@@ -35,8 +36,8 @@
       <img class="intro__still" src="assets/products/collection.webp"
         srcset="assets/products/collection-small.webp 960w, assets/products/collection.webp 1920w" sizes="100vw"
         alt="مجموعة رائحة أمي: علبة الهدايا وعلبة المعمول والمرش والدهن">
-      <video class="intro__video" muted playsinline preload="auto" poster="assets/world/poster.jpg?v=4"
-        data-src="assets/world/film.mp4?v=4" data-src-mobile="assets/world/film-mobile.mp4?v=4" aria-hidden="true"></video>
+      <video class="intro__video" muted playsinline preload="auto" poster="assets/world/poster.jpg?v=5"
+        data-src="assets/world/film.mp4?v=5" data-src-mobile="assets/world/film-mobile.mp4?v=5" aria-hidden="true"></video>
       <div class="intro__captions" aria-hidden="true"><p class="caption" data-i="0"><span class="caption__k">الخامات</span><span class="caption__t">خمس خامات، وحبة وحدة</span></p><p class="caption" data-i="1"><span class="caption__k">الخلطة</span><span class="caption__t">تمتزج على مهل</span></p><p class="caption" data-i="2"><span class="caption__k">التكوير</span><span class="caption__t">تتكوّر بين الكفّين</span></p><p class="caption" data-i="3"><span class="caption__k">المعمول</span><span class="caption__t">معمول رائحة أمي</span></p></div>
       <div class="intro__bar" aria-hidden="true"><span></span></div>
       <button class="intro__skip" type="button">تخطّي</button>
@@ -97,19 +98,19 @@
               <div class="product__label"><img src="assets/labels/mamool-malaki.svg" alt="ملصق الملكي" loading="lazy"></div>
               <div><p class="product__name">الملكي</p><p class="product__note">خلطة البيت الأصيلة · 80 جرام</p></div>
               <p class="product__price">130 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب الملكي">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="الملكي" data-price="130" data-size="80 جرام" aria-label="أضف الملكي للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
             <li class="product">
               <div class="product__label"><img src="assets/labels/mamool-makhsoos.svg" alt="ملصق المخصوص" loading="lazy"></div>
               <div><p class="product__name">المخصوص</p><p class="product__note">خلطة الدوسري · 100 جرام</p></div>
               <p class="product__price">250 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب المخصوص">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="المخصوص" data-price="250" data-size="100 جرام" aria-label="أضف المخصوص للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
             <li class="product">
               <div class="product__label"><img src="assets/labels/mamool-arayesi.svg" alt="ملصق العرايسي" loading="lazy"></div>
               <div><p class="product__name">العرايسي</p><p class="product__note">لليالي الفرح · 80 جرام</p></div>
               <p class="product__price">120 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب العرايسي">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="العرايسي" data-price="120" data-size="80 جرام" aria-label="أضف العرايسي للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
           </ul>
         </div>
@@ -127,13 +128,13 @@
               <div class="product__label"><img src="assets/labels/oud-musqa.svg" alt="ملصق عود مسقى" loading="lazy"></div>
               <div><p class="product__name">عود مسقى</p><p class="product__note">دخون يومي · 80 جرام</p></div>
               <p class="product__price">95 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب عود مسقى">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="عود مسقى" data-price="95" data-size="80 جرام" aria-label="أضف عود مسقى للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
             <li class="product">
               <div class="product__label"><img src="assets/labels/oud-tabiei.svg" alt="ملصق عود طبيعي" loading="lazy"></div>
               <div><p class="product__name">عود طبيعي</p><p class="product__note">مسقى زيوت · 80 جرام</p></div>
               <p class="product__price">250 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب عود طبيعي">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="عود طبيعي" data-price="250" data-size="80 جرام" aria-label="أضف عود طبيعي للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
           </ul>
         </div>
@@ -151,19 +152,19 @@
               <div class="product__label"><img src="assets/labels/spray-aseel.svg" alt="ملصق أسيل" loading="lazy"></div>
               <div><p class="product__name">أسيل</p><p class="product__note">مرش مفارش ومجالس · 500 مل</p></div>
               <p class="product__price">80 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب أسيل">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="أسيل" data-price="80" data-size="500 مل" aria-label="أضف أسيل للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
             <li class="product">
               <div class="product__label"><img src="assets/labels/spray-shahd.svg" alt="ملصق شهد" loading="lazy"></div>
               <div><p class="product__name">شهد</p><p class="product__note">مرش مفارش ومجالس · 500 مل</p></div>
               <p class="product__price">80 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب شهد">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="شهد" data-price="80" data-size="500 مل" aria-label="أضف شهد للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
             <li class="product">
               <div class="product__label"><img src="assets/labels/spray-sadeem.svg" alt="ملصق سديم" loading="lazy"></div>
               <div><p class="product__name">سديم</p><p class="product__note">مرش مفارش ومجالس · 500 مل</p></div>
               <p class="product__price">80 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب سديم">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="سديم" data-price="80" data-size="500 مل" aria-label="أضف سديم للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
           </ul>
         </div>
@@ -181,29 +182,57 @@
               <div class="product__label"><img src="assets/labels/oil-fitshat.svg" alt="ملصق فتشة العروس" loading="lazy"></div>
               <div><p class="product__name">فتشة العروس</p><p class="product__note">دهن عطري · تولة</p></div>
               <p class="product__price">70 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب فتشة العروس">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="فتشة العروس" data-price="70" data-size="تولة" aria-label="أضف فتشة العروس للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
             <li class="product">
               <div class="product__label"><img src="assets/labels/oil-saffron.svg" alt="ملصق خمرية الزعفران" loading="lazy"></div>
               <div><p class="product__name">خمرية الزعفران</p><p class="product__note">دهن عطري · تولة</p></div>
               <p class="product__price">60 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب خمرية الزعفران">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="خمرية الزعفران" data-price="60" data-size="تولة" aria-label="أضف خمرية الزعفران للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
             <li class="product">
               <div class="product__label"><img src="assets/labels/oil-musk.svg" alt="ملصق خمرية المسك" loading="lazy"></div>
               <div><p class="product__name">خمرية المسك</p><p class="product__note">دهن عطري · تولة</p></div>
               <p class="product__price">60 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب خمرية المسك">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="خمرية المسك" data-price="60" data-size="تولة" aria-label="أضف خمرية المسك للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
             <li class="product">
               <div class="product__label"><img src="assets/labels/oil-oud.svg" alt="ملصق دهن العود الطبيعي" loading="lazy"></div>
               <div><p class="product__name">دهن العود الطبيعي</p><p class="product__note">دهن عود صافي · ربع تولة</p></div>
               <p class="product__price">120 <small>ر.س</small></p>
-              <a class="product__ask" href="https://www.instagram.com/mum_smell" target="_blank" rel="noopener" aria-label="اطلب دهن العود الطبيعي">اطلب</a>
+              <button class="product__ask" type="button" data-add data-name="دهن العود الطبيعي" data-price="120" data-size="ربع تولة" aria-label="أضف دهن العود الطبيعي للطلب">أضف <span aria-hidden="true">+</span></button>
             </li>
           </ul>
         </div>
       </article>
+    </section>
+
+
+    <section class="usage" id="usage" aria-labelledby="usage-title">
+      <h2 class="display" id="usage-title">طريقة الاستخدام</h2>
+      <p class="usage__lead">كل منتج له طقسه، وهذي الطريقة اللي تطلّع أحلى ما فيه.</p>
+      <div class="usage__grid">
+        <article class="ritual">
+          <span class="ritual__n" aria-hidden="true">١</span>
+          <h3>المعمول</h3>
+          <p>حط حبة وحدة على جمرة هادية أو مبخرة كهربائية على حرارة متوسطة، وخلها تذوب على مهل. حبة صغيرة تكفي المجلس.</p>
+        </article>
+        <article class="ritual">
+          <span class="ritual__n" aria-hidden="true">٢</span>
+          <h3>العود</h3>
+          <p>قطعة صغيرة على الجمر تكفي. قلّب الدخون بين يديك ومرّره على الثوب والشعر قبل الطلعة.</p>
+        </article>
+        <article class="ritual">
+          <span class="ritual__n" aria-hidden="true">٣</span>
+          <h3>المرشات</h3>
+          <p>رشّ من مسافة ٢٠ سم على المفارش والستاير والكنب. رشة أو رشتين تكفي، والريحة تثبت طول اليوم.</p>
+        </article>
+        <article class="ritual">
+          <span class="ritual__n" aria-hidden="true">٤</span>
+          <h3>الأدهان</h3>
+          <p>نقطة على النبض خلف الأذن وعلى المعصم. ولثبات أطول، حط الدهن قبل البخور.</p>
+        </article>
+      </div>
     </section>
 
     <section class="story" id="story" aria-labelledby="story-title">
@@ -227,7 +256,7 @@
       <h2 class="display" id="order-title">كيف تطلب</h2>
       <ol class="steps">
         <li><span class="steps__n" aria-hidden="true">١</span><p class="steps__t">اختر من المجموعة</p><p>المعمول، العود، المرشات أو الأدهان.</p></li>
-        <li><span class="steps__n" aria-hidden="true">٢</span><p class="steps__t">راسلنا</p><p>على انستقرام أو تيك توك باسم المنتج والكمية.</p></li>
+        <li><span class="steps__n" aria-hidden="true">٢</span><p class="steps__t">راسلنا</p><p>أضف منتجاتك للسلة واضغط "أرسل الطلب"، نجهّز لك الرسالة ونفتح محادثتنا.</p></li>
         <li><span class="steps__n" aria-hidden="true">٣</span><p class="steps__t">يوصلك مغلّف</p><p>بعلبة رائحة أمي وختمها، جاهز للهدية.</p></li>
       </ol>
       <div class="order__ctas">
@@ -240,12 +269,38 @@
     </section>
   </main>
 
+
+  <button class="cart-fab" type="button" data-cart-open aria-label="سلة الطلب">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 7Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 7a3 3 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    <span>سلتي</span><span class="cart-count" data-count>0</span>
+  </button>
+
+  <div class="cart" data-cart hidden>
+    <div class="cart__backdrop" data-cart-close></div>
+    <aside class="cart__panel" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+      <div class="cart__head">
+        <h2 id="cart-title">سلة الطلب</h2>
+        <button class="cart__close" type="button" data-cart-close aria-label="إغلاق">×</button>
+      </div>
+      <div class="pattern" aria-hidden="true"></div>
+      <ul class="cart__list" data-cart-list></ul>
+      <p class="cart__empty" data-cart-empty>سلتك فاضية. اختر من المجموعة وأضف اللي يعجبك.</p>
+      <div class="cart__foot">
+        <p class="cart__total">المجموع <strong data-cart-total>0 ر.س</strong></p>
+        <a class="cart__send" href="https://ig.me/m/mum_smell" target="_blank" rel="noopener" data-cart-send>أرسل الطلب على انستقرام</a>
+        <p class="cart__hint">ننسخ لك رسالة الطلب جاهزة، وتلصقها في المحادثة.</p>
+      </div>
+    </aside>
+  </div>
+
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+
   <footer class="footer">
     <div class="pattern" aria-hidden="true"></div>
     <img src="assets/brand/logo-square-rev.svg" alt="رائحة أمي Raihat Ummi" loading="lazy">
     <p>رائحة أمي · Raihat Ummi</p>
     <p class="footer__small">صُنع يدوياً في حائل · ٢٠٢٦</p>
   </footer>
-  <script src="app.js?v=4" defer></script>
+  <script src="app.js?v=5" defer></script>
 </body>
 </html>
